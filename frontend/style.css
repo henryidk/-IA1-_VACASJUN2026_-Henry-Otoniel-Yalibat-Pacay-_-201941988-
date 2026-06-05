@@ -1,0 +1,138 @@
+/* ===== VARIABLES ===== */
+:root {
+  --primary: #778873;
+  --primary-dark: #5c6b58;
+  --success: #778873;
+  --success-light: #D2DCB6;
+  --danger: #b91c1c;
+  --danger-light: #fee2e2;
+  --warning: #92400e;
+  --warning-light: #fef3c7;
+  --bg: #F1F3E0;
+  --card: #ffffff;
+  --border: #D2DCB6;
+  --text: #2a352a;
+  --text-muted: #778873;
+  --shadow: 0 2px 8px rgba(119,136,115,0.10);
+  --shadow-lg: 0 8px 24px rgba(119,136,115,0.16);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, #5c6b58 0%, #778873 100%);
+  color: #F1F3E0;
+  padding: 28px 24px;
+  box-shadow: var(--shadow-lg);
+}
+.header-content { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+.header h1 { font-size: 1.6rem; font-weight: 700; }
+.header p { font-size: 0.9rem; opacity: 0.85; margin-top: 2px; }
+
+/* ===== CONTAINER ===== */
+.container { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ===== TABS ===== */
+.tabs { display: flex; gap: 4px; background: var(--card); border-radius: var(--radius); padding: 4px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.tab { flex: 1; padding: 10px 16px; border: none; background: transparent; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); transition: all 0.2s; }
+.tab.active { background: var(--primary); color: #F1F3E0; box-shadow: 0 2px 8px rgba(119,136,115,0.3); }
+.tab:not(.active):hover { background: var(--bg); color: var(--text); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ===== CARDS ===== */
+.card { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 16px; }
+.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.card-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.card-destacada { border-left: 4px solid var(--primary); background: linear-gradient(135deg, #D2DCB6 0%, #ffffff 100%); }
+
+/* ===== FORMULARIOS ===== */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+select, input[type="text"], input[type="number"] {
+  padding: 10px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 0.95rem; color: var(--text); background: white; transition: border-color 0.2s; width: 100%;
+}
+select:focus, input:focus { outline: none; border-color: var(--primary); }
+
+/* ===== BOTONES ===== */
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { padding: 10px 22px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--primary); color: #F1F3E0; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(119,136,115,0.35); }
+.btn-secondary { background: var(--bg); color: var(--text); border: 2px solid var(--border); }
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #15803d; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-sm { padding: 6px 14px; font-size: 0.85rem; margin-top: 8px; }
+.btn-icon { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px 8px; color: var(--text-muted); border-radius: 4px; transition: all 0.15s; }
+.btn-icon:hover { background: var(--danger-light); color: var(--danger); }
+.mt { margin-top: 16px; }
+
+/* ===== BADGES ===== */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+.badge-green { background: var(--success-light); color: var(--success); }
+.badge-blue { background: #dbeafe; color: var(--primary); }
+.badge-gray { background: #f1f5f9; color: var(--text-muted); }
+
+/* ===== ALERTAS ===== */
+.alerta { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; margin-top: 12px; font-weight: 500; }
+.alerta-error { background: var(--danger-light); color: var(--danger); border-left: 4px solid var(--danger); }
+.alerta-exito { background: var(--success-light); color: var(--success); border-left: 4px solid var(--success); }
+.hidden { display: none !important; }
+
+/* ===== RUTA DESTACADA ===== */
+.camino { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0; }
+.ciudad-chip { background: white; border: 2px solid var(--success); color: var(--success); padding: 4px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+.flecha { color: var(--text-muted); font-size: 1rem; }
+.distancia-destacada { font-size: 1.5rem; font-weight: 700; color: var(--success); }
+
+/* ===== ESTADÍSTICAS ===== */
+.estadisticas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: #D2DCB6; border-radius: var(--radius-sm); padding: 16px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.stat-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.stat-valor { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+
+/* ===== LISTA DE RUTAS ===== */
+.ruta-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.ruta-item:last-child { border-bottom: none; }
+.ruta-numero { width: 28px; height: 28px; border-radius: 50%; background: var(--bg); color: var(--text-muted); font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ruta-numero.primero { background: var(--success); color: white; }
+.ruta-detalle { flex: 1; }
+.ruta-ciudades { font-size: 0.88rem; color: var(--text); }
+.ruta-distancia { font-weight: 700; color: var(--primary); white-space: nowrap; }
+
+/* ===== GESTIÓN DE CIUDADES ===== */
+.dos-columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.subtitulo { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin: 16px 0 10px; }
+.conexion-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.conexion-destino { flex: 2; }
+.conexion-distancia { flex: 1; }
+
+/* ===== SESIÓN ===== */
+.sesion-ciudad { background: #D2DCB6; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px; }
+.sesion-ciudad-nombre { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.sesion-conexion { font-size: 0.82rem; color: var(--text-muted); }
+
+/* ===== FOOTER ===== */
+.footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.82rem; border-top: 1px solid var(--border); background: var(--card); }
+
+/* ===== UTILIDADES ===== */
+.text-muted { color: var(--text-muted); }
+.text-center { text-align: center; padding: 20px 0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 680px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .estadisticas-grid { grid-template-columns: repeat(2, 1fr); }
+  .dos-columnas { grid-template-columns: 1fr; }
+  .header h1 { font-size: 1.2rem; }
+}

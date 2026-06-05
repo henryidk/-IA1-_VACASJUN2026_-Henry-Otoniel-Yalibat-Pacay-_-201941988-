@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Rutas Interdepartamentales</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <h1>Sistema de Rutas Interdepartamentales</h1>
+        <p>Encuentra la ruta óptima entre ciudades de Guatemala</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="buscar">Buscar Rutas</button>
+      <button class="tab" data-tab="ciudades">Gestionar Ciudades</button>
+    </div>
+
+    <!-- ======================== TAB: BUSCAR RUTAS ======================== -->
+    <section id="tab-buscar" class="tab-content active">
+
+      <!-- Formulario de búsqueda -->
+      <div class="card">
+        <h2 class="card-title">Selecciona tu ruta</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="origen">Ciudad de Origen</label>
+            <select id="origen">
+              <option value="">-- Selecciona origen --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="destino">Ciudad de Destino</label>
+            <select id="destino">
+              <option value="">-- Selecciona destino --</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button id="btn-buscar" class="btn btn-primary">Buscar Rutas</button>
+          <button id="btn-limpiar" class="btn btn-secondary">Limpiar</button>
+        </div>
+      </div>
+
+      <!-- Mensaje de error/alerta -->
+      <div id="alerta" class="alerta hidden"></div>
+
+      <!-- Resultados (ocultos hasta buscar) -->
+      <div id="resultados" class="hidden">
+
+        <!-- Ruta más corta destacada -->
+        <div class="card card-destacada">
+          <div class="card-title-row">
+            <span class="badge badge-green">⚡ Ruta más corta</span>
+          </div>
+          <div id="ruta-corta-camino" class="camino"></div>
+          <div id="ruta-corta-distancia" class="distancia-destacada"></div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="estadisticas-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total de rutas</div>
+            <div id="stat-total" class="stat-valor">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Distancia mínima</div>
+            <div id="stat-min" class="stat-valor">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Distancia máxima</div>
+            <div id="stat-max" class="stat-valor">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Distancia promedio</div>
+            <div id="stat-prom" class="stat-valor">—</div>
+          </div>
+        </div>
+
+        <!-- Todas las rutas -->
+        <div class="card">
+          <h2 class="card-title">Todas las rutas <span class="text-muted">(ordenadas por distancia)</span></h2>
+          <div id="lista-rutas"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================== TAB: GESTIONAR CIUDADES ======================== -->
+    <section id="tab-ciudades" class="tab-content hidden">
+
+      <div class="dos-columnas">
+
+        <!-- Formulario nueva ciudad -->
+        <div class="card">
+          <h2 class="card-title">Agregar nueva ciudad</h2>
+          <div class="form-group">
+            <label for="nueva-ciudad">Nombre de la ciudad</label>
+            <input type="text" id="nueva-ciudad" placeholder="Ej: Jalapa" />
+          </div>
+
+          <h3 class="subtitulo">Conexiones</h3>
+          <div id="conexiones-container">
+            <div class="conexion-row">
+              <select class="conexion-destino">
+                <option value="">-- Ciudad destino --</option>
+              </select>
+              <input type="number" class="conexion-distancia" placeholder="km" min="1" />
+              <button class="btn-icon btn-remove" title="Eliminar">✕</button>
+            </div>
+          </div>
+          <button id="btn-add-conexion" class="btn btn-secondary btn-sm">+ Agregar conexión</button>
+
+          <div class="btn-group mt">
+            <button id="btn-agregar-ciudad" class="btn btn-primary">Agregar a sesión</button>
+          </div>
+          <div id="alerta-ciudad" class="alerta hidden"></div>
+        </div>
+
+        <!-- Panel de sesión -->
+        <div class="card">
+          <h2 class="card-title">Sesión actual</h2>
+          <div id="sesion-vacia" class="text-muted text-center">No hay ciudades pendientes en esta sesión.</div>
+          <div id="sesion-contenido" class="hidden">
+            <div id="sesion-lista"></div>
+            <div class="btn-group mt">
+              <button id="btn-confirmar" class="btn btn-success">Confirmar cambios</button>
+              <button id="btn-limpiar-sesion" class="btn btn-danger">Limpiar sesión</button>
+            </div>
+          </div>
+          <div id="alerta-sesion" class="alerta hidden"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Sistema de Rutas — Motor de inferencia: SWI-Prolog · Backend: FastAPI · Guatemala 2026</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
