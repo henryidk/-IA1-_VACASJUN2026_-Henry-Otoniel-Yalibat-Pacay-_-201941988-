@@ -134,6 +134,17 @@ class RouteService:
         self._nuevas_conexiones.clear()
         return {"mensaje": "Sesión limpiada. No se aplicaron cambios."}
 
+    def restablecer(self) -> dict:
+        self._nuevas_ciudades.clear()
+        self._nuevas_conexiones.clear()
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        extended_path = os.path.join(base_dir, "prolog", "rutas_extended.pl")
+        if os.path.exists(extended_path):
+            os.remove(extended_path)
+            self._engine.recargar()
+            return {"mensaje": "Base de conocimiento restablecida al estado original."}
+        return {"mensaje": "No hay cambios que restablecer. Ya se usa la base original."}
+
 
 # Instancia única compartida por toda la aplicación
 route_service = RouteService()

@@ -68,3 +68,8 @@ def confirmar_cambios():
 @router.delete("/ciudades/sesion", summary="Limpiar la sesión sin aplicar cambios")
 def limpiar_sesion():
     return route_service.limpiar_sesion()
+
+
+@router.delete("/ciudades/restablecer", summary="Eliminar ciudades agregadas y volver a la base original")
+def restablecer():
+    return route_service.restablecer()
