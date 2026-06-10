@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from database import create_tables
+from seed import seed
 import models  # noqa: F401 — necesario para que SQLAlchemy registre las tablas
 
 app = FastAPI(title="SmartBot API")
@@ -16,6 +17,7 @@ templates = Jinja2Templates(directory="templates")
 @app.on_event("startup")
 def startup():
     create_tables()
+    seed()
 
 
 @app.get("/health")
