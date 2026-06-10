@@ -8,7 +8,9 @@ def create_app():
     app = Flask(__name__)
 
     from routes.diagnostico import diagnostico_bp
+    from routes.historial import historial_bp
     app.register_blueprint(diagnostico_bp, url_prefix='/api')
+    app.register_blueprint(historial_bp, url_prefix='/api')
 
     @app.errorhandler(404)
     def not_found(e):
