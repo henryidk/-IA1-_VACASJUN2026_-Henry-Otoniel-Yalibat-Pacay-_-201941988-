@@ -24,8 +24,7 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
     if redir:
         return redir
     config = db.query(Config).filter(Config.clave == "telegram_chat_id").first()
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="dashboard.html", context={
         "admin": request.session.get("admin"),
         "total_preguntas": db.query(Pregunta).count(),
         "total_categorias": db.query(Categoria).count(),
@@ -40,8 +39,7 @@ def listar_preguntas(request: Request, db: Session = Depends(get_db)):
     redir = check_auth(request)
     if redir:
         return redir
-    return templates.TemplateResponse("preguntas.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="preguntas.html", context={
         "admin": request.session.get("admin"),
         "preguntas": db.query(Pregunta).all(),
         "categorias": db.query(Categoria).all(),
@@ -53,8 +51,7 @@ def nueva_pregunta_form(request: Request, db: Session = Depends(get_db)):
     redir = check_auth(request)
     if redir:
         return redir
-    return templates.TemplateResponse("pregunta_form.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="pregunta_form.html", context={
         "admin": request.session.get("admin"),
         "pregunta": None,
         "categorias": db.query(Categoria).all(),
@@ -86,8 +83,7 @@ def editar_pregunta_form(id: int, request: Request, db: Session = Depends(get_db
     pregunta = db.query(Pregunta).filter(Pregunta.id == id).first()
     if not pregunta:
         return RedirectResponse(url="/panel/preguntas", status_code=302)
-    return templates.TemplateResponse("pregunta_form.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="pregunta_form.html", context={
         "admin": request.session.get("admin"),
         "pregunta": pregunta,
         "categorias": db.query(Categoria).all(),
@@ -136,8 +132,7 @@ def listar_categorias(request: Request, db: Session = Depends(get_db)):
     redir = check_auth(request)
     if redir:
         return redir
-    return templates.TemplateResponse("categorias.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="categorias.html", context={
         "admin": request.session.get("admin"),
         "categorias": db.query(Categoria).all(),
     })
@@ -148,8 +143,7 @@ def nueva_categoria_form(request: Request):
     redir = check_auth(request)
     if redir:
         return redir
-    return templates.TemplateResponse("categoria_form.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="categoria_form.html", context={
         "admin": request.session.get("admin"),
         "categoria": None,
     })
@@ -178,8 +172,7 @@ def editar_categoria_form(id: int, request: Request, db: Session = Depends(get_d
     categoria = db.query(Categoria).filter(Categoria.id == id).first()
     if not categoria:
         return RedirectResponse(url="/panel/categorias", status_code=302)
-    return templates.TemplateResponse("categoria_form.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="categoria_form.html", context={
         "admin": request.session.get("admin"),
         "categoria": categoria,
     })
@@ -224,8 +217,7 @@ def config_page(request: Request, db: Session = Depends(get_db)):
     if redir:
         return redir
     config = db.query(Config).filter(Config.clave == "telegram_chat_id").first()
-    return templates.TemplateResponse("config.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="config.html", context={
         "admin": request.session.get("admin"),
         "chat_id": config.valor if config else "",
     })

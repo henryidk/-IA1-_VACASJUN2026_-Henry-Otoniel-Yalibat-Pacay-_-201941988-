@@ -16,7 +16,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def login_page(request: Request, admin=Depends(get_admin_session)):
     if admin:
         return RedirectResponse(url="/", status_code=302)
-    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+    return templates.TemplateResponse(request=request, name="login.html", context={"error": None})
 
 
 @router.post("/login")
@@ -29,7 +29,7 @@ def login(
     user = db.query(UsuarioAdmin).filter(UsuarioAdmin.username == username).first()
     if not user or not pwd_context.verify(password, user.password):
         return templates.TemplateResponse(
-            "login.html", {"request": request, "error": "Usuario o contraseña incorrectos"}
+            request=request, name="login.html", context={"error": "Usuario o contraseña incorrectos"}
         )
     request.session["admin"] = user.username
     return RedirectResponse(url="/", status_code=302)
