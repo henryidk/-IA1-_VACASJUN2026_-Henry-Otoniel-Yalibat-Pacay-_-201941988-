@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from database import create_tables
-from seed import seed
 from routes.auth import router as auth_router
 from routes.categorias import router as categorias_router
 from routes.preguntas import router as preguntas_router
@@ -23,7 +22,6 @@ templates = Jinja2Templates(directory="templates")
 @app.on_event("startup")
 def startup():
     create_tables()
-    seed()
 
 
 app.include_router(auth_router)
