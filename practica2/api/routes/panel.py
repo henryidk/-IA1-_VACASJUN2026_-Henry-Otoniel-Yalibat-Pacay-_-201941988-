@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from database import get_db
 from models import Categoria, Pregunta, Config
+from telegram_notify import notificar
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -70,8 +71,10 @@ def crear_pregunta(
     if redir:
         return redir
     cat_id = int(categoria_id) if categoria_id and categoria_id.strip() else None
-    db.add(Pregunta(pregunta=pregunta, respuesta=respuesta, categoria_id=cat_id, activa=True))
+    nueva = Pregunta(pregunta=pregunta, respuesta=respuesta, categoria_id=cat_id, activa=True)
+    db.add(nueva)
     db.commit()
+    notificar(db, f"Nueva pregunta agregada: {pregunta}")
     return RedirectResponse(url="/panel/preguntas", status_code=302)
 
 
@@ -110,6 +113,7 @@ def actualizar_pregunta(
         obj.categoria_id = int(categoria_id) if categoria_id and categoria_id.strip() else None
         obj.activa = activa == "on"
         db.commit()
+        notificar(db, f"Pregunta actualizada: {pregunta}")
     return RedirectResponse(url="/panel/preguntas", status_code=302)
 
 
@@ -120,6 +124,7 @@ def eliminar_pregunta(id: int, request: Request, db: Session = Depends(get_db)):
         return redir
     obj = db.query(Pregunta).filter(Pregunta.id == id).first()
     if obj:
+        notificar(db, f"Pregunta eliminada: {obj.pregunta}")
         db.delete(obj)
         db.commit()
     return RedirectResponse(url="/panel/preguntas", status_code=302)
@@ -161,6 +166,7 @@ def crear_categoria(
         return redir
     db.add(Categoria(nombre=nombre, descripcion=descripcion))
     db.commit()
+    notificar(db, f"Nueva categoria agregada: {nombre}")
     return RedirectResponse(url="/panel/categorias", status_code=302)
 
 
@@ -194,6 +200,7 @@ def actualizar_categoria(
         obj.nombre = nombre
         obj.descripcion = descripcion
         db.commit()
+        notificar(db, f"Categoria actualizada: {nombre}")
     return RedirectResponse(url="/panel/categorias", status_code=302)
 
 
@@ -204,6 +211,7 @@ def eliminar_categoria(id: int, request: Request, db: Session = Depends(get_db))
         return redir
     obj = db.query(Categoria).filter(Categoria.id == id).first()
     if obj:
+        notificar(db, f"Categoria eliminada: {obj.nombre}")
         db.delete(obj)
         db.commit()
     return RedirectResponse(url="/panel/categorias", status_code=302)

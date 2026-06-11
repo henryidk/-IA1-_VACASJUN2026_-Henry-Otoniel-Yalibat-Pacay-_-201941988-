@@ -5,6 +5,7 @@ from typing import Optional
 from database import get_db
 from models import Categoria
 from dependencies import get_admin_session
+from telegram_notify import notificar
 
 router = APIRouter(prefix="/categorias", tags=["categorias"])
 
@@ -42,6 +43,7 @@ def crear(data: CategoriaCreate, db: Session = Depends(get_db), admin=Depends(ge
     db.add(categoria)
     db.commit()
     db.refresh(categoria)
+    notificar(db, f"Nueva categoria agregada: {categoria.nombre}")
     return categoria
 
 

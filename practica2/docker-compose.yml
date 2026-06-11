@@ -24,6 +24,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ADMIN_USER: ${ADMIN_USER}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
     depends_on:
       db:
         condition: service_healthy

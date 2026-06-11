@@ -5,6 +5,7 @@ from typing import Optional
 from database import get_db
 from models import Pregunta
 from dependencies import get_admin_session
+from telegram_notify import notificar
 
 router = APIRouter(prefix="/preguntas", tags=["preguntas"])
 
@@ -47,6 +48,7 @@ def crear(data: PreguntaCreate, db: Session = Depends(get_db), admin=Depends(get
     db.add(pregunta)
     db.commit()
     db.refresh(pregunta)
+    notificar(db, f"Nueva pregunta agregada: {pregunta.pregunta}")
     return pregunta
 
 
