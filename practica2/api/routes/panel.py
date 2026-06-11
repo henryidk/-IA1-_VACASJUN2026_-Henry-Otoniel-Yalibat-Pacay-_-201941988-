@@ -65,13 +65,14 @@ def crear_pregunta(
     pregunta: str = Form(...),
     respuesta: str = Form(...),
     categoria_id: Optional[str] = Form(None),
+    keyw: Optional[str] = Form(None),
     db: Session = Depends(get_db),
 ):
     redir = check_auth(request)
     if redir:
         return redir
     cat_id = int(categoria_id) if categoria_id and categoria_id.strip() else None
-    nueva = Pregunta(pregunta=pregunta, respuesta=respuesta, categoria_id=cat_id, activa=True)
+    nueva = Pregunta(pregunta=pregunta, respuesta=respuesta, categoria_id=cat_id, activa=True, keyw=keyw)
     db.add(nueva)
     db.commit()
     notificar(db, f"Nueva pregunta agregada: {pregunta}")
@@ -101,6 +102,7 @@ def actualizar_pregunta(
     respuesta: str = Form(...),
     categoria_id: Optional[str] = Form(None),
     activa: Optional[str] = Form(None),
+    keyw: Optional[str] = Form(None),
     db: Session = Depends(get_db),
 ):
     redir = check_auth(request)
@@ -112,6 +114,7 @@ def actualizar_pregunta(
         obj.respuesta = respuesta
         obj.categoria_id = int(categoria_id) if categoria_id and categoria_id.strip() else None
         obj.activa = activa == "on"
+        obj.keyw = keyw
         db.commit()
         notificar(db, f"Pregunta actualizada: {pregunta}")
     return RedirectResponse(url="/panel/preguntas", status_code=302)

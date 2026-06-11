@@ -24,6 +24,11 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <label>Palabras clave</label>
+            <input type="text" name="keyw" value="{% if pregunta and pregunta.keyw %}{{ pregunta.keyw }}{% endif %}" placeholder="Ej: hora, abren, cierran, atienden">
+            <small style="color:#6b7280;">Separa las palabras con comas. El bot las usará para encontrar esta respuesta.</small>
+        </div>
         {% if pregunta %}
         <div class="form-group">
             <div class="form-check">

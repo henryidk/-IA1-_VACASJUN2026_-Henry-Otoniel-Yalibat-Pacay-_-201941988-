@@ -15,7 +15,10 @@ def consultar(q: str, db: Session = Depends(get_db)):
     pregunta = (
         db.query(Pregunta)
         .filter(Pregunta.activa == True)
-        .filter(func.unaccent(Pregunta.pregunta).ilike(func.unaccent(termino)))
+        .filter(
+            func.unaccent(Pregunta.pregunta).ilike(func.unaccent(termino)) |
+            func.unaccent(Pregunta.keyw).ilike(func.unaccent(termino))
+        )
         .first()
     )
     if pregunta:
