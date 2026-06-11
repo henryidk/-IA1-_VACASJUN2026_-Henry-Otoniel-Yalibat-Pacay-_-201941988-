@@ -10,8 +10,36 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def seed():
     db: Session = SessionLocal()
     try:
-        if db.query(Categoria).count() > 0:
-            return
+        _seed_categorias(db)
+        _seed_admin(db)
+        _seed_config(db)
+    except Exception as e:
+        db.rollback()
+        print(f"Error en seed: {e}")
+    finally:
+        db.close()
+
+
+def _seed_admin(db: Session):
+    if db.query(UsuarioAdmin).count() > 0:
+        return
+    admin_user = os.getenv("ADMIN_USER", "IA1-User")
+    admin_password = os.getenv("ADMIN_PASSWORD", "IA1-password@_new")
+    db.add(UsuarioAdmin(username=admin_user, password=pwd_context.hash(admin_password)))
+    db.commit()
+    print("Usuario admin creado.")
+
+
+def _seed_config(db: Session):
+    if db.query(Config).filter(Config.clave == "telegram_chat_id").first():
+        return
+    db.add(Config(clave="telegram_chat_id", valor=""))
+    db.commit()
+
+
+def _seed_categorias(db: Session):
+    if db.query(Categoria).count() > 0:
+        return
 
         # --- Categorías ---
         general = Categoria(nombre="Información General", descripcion="Preguntas sobre la institución en general")
@@ -52,22 +80,5 @@ def seed():
         ]
 
         db.add_all(preguntas)
-
-        # --- Usuario administrador ---
-        admin_user = os.getenv("ADMIN_USER", "IA1-User")
-        admin_password = os.getenv("ADMIN_PASSWORD", "IA1-password@_new")
-        db.add(UsuarioAdmin(
-            username=admin_user,
-            password=pwd_context.hash(admin_password)
-        ))
-
-        # --- Configuración por defecto ---
-        db.add(Config(clave="telegram_chat_id", valor=""))
-
         db.commit()
-        print("Base de datos inicializada con datos de prueba.")
-    except Exception as e:
-        db.rollback()
-        print(f"Error en seed: {e}")
-    finally:
-        db.close()
+        print("Categorías y preguntas creadas.")
