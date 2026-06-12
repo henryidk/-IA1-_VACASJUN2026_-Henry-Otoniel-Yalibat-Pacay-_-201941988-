@@ -79,7 +79,6 @@
             <span>Panel Administrativo</span>
         </div>
         <nav>
-            <a href="/" {% if request.url.path == '/' %}class="active"{% endif %}>Dashboard</a>
             <a href="/panel/preguntas" {% if '/preguntas' in request.url.path %}class="active"{% endif %}>Preguntas</a>
             <a href="/panel/categorias" {% if '/categorias' in request.url.path %}class="active"{% endif %}>Categorías</a>
             <a href="/panel/config" {% if '/config' in request.url.path %}class="active"{% endif %}>Configuración</a>

@@ -20,17 +20,10 @@ def check_auth(request: Request):
 # --- DASHBOARD ---
 
 @router.get("/")
-def dashboard(request: Request, db: Session = Depends(get_db)):
-    redir = check_auth(request)
-    if redir:
-        return redir
-    config = db.query(Config).filter(Config.clave == "telegram_chat_id").first()
-    return templates.TemplateResponse(request=request, name="dashboard.html", context={
-        "admin": request.session.get("admin"),
-        "total_preguntas": db.query(Pregunta).count(),
-        "total_categorias": db.query(Categoria).count(),
-        "chat_id": config.valor if config else "",
-    })
+def index(request: Request):
+    if not request.session.get("admin"):
+        return RedirectResponse(url="/login", status_code=302)
+    return RedirectResponse(url="/panel/preguntas", status_code=302)
 
 
 # --- PREGUNTAS ---
