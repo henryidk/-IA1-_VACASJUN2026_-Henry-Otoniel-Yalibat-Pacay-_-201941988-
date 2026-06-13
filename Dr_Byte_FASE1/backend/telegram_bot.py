@@ -4,22 +4,9 @@ import asyncio
 import config
 import bot_config
 
-_bot = None
-_token_actual = None
-
 
 def resetear_bot():
-    global _bot, _token_actual
-    _bot = None
-    _token_actual = None
-
-
-def get_bot(token):
-    global _bot, _token_actual
-    if _bot is None or token != _token_actual:
-        _bot = Bot(token=token)
-        _token_actual = token
-    return _bot
+    pass
 
 
 def verificar_conexion():
@@ -27,9 +14,9 @@ def verificar_conexion():
     token = cfg['token'] or config.TELEGRAM_TOKEN
 
     async def _verificar():
-        bot = get_bot(token)
-        info = await bot.get_me()
-        return {'nombre': info.first_name, 'username': info.username}
+        async with Bot(token=token) as bot:
+            info = await bot.get_me()
+            return {'nombre': info.first_name, 'username': info.username}
 
     return asyncio.run(_verificar())
 
@@ -43,15 +30,15 @@ def enviar_notificacion(id_diagnostico, fecha, sintomas, descripcion, recomendac
 
     if not cfg['activo']:
         async def _mantenimiento():
-            bot = get_bot(token)
-            await bot.send_message(
-                chat_id=chat_id,
-                text='Lo sentimos, el bot está en mantenimiento. Regresa más tarde.',
-            )
+            async with Bot(token=token) as bot:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text='Lo sentimos, el bot está en mantenimiento. Regresa más tarde.',
+                )
         try:
             asyncio.run(_mantenimiento())
-        except TelegramError as e:
-            print(f'Error al enviar mensaje de mantenimiento: {e}')
+        except Exception as e:
+            print(f'[Telegram] Error al enviar mensaje de mantenimiento: {type(e).__name__}: {e}')
         return
 
     recomendaciones_texto = '\n'.join([f'  • {r}' for r in recomendaciones])
@@ -67,14 +54,14 @@ def enviar_notificacion(id_diagnostico, fecha, sintomas, descripcion, recomendac
     )
 
     async def _enviar():
-        bot = get_bot(token)
-        await bot.send_message(
-            chat_id=chat_id,
-            text=mensaje,
-            parse_mode='Markdown'
-        )
+        async with Bot(token=token) as bot:
+            await bot.send_message(
+                chat_id=chat_id,
+                text=mensaje,
+                parse_mode='Markdown'
+            )
 
     try:
         asyncio.run(_enviar())
-    except TelegramError as e:
-        print(f'Error al enviar notificación de Telegram: {e}')
+    except Exception as e:
+        print(f'[Telegram] Error al enviar notificación: {type(e).__name__}: {e}')
