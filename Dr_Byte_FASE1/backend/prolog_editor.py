@@ -173,3 +173,90 @@ def eliminar_recomendacion(id_falla, texto):
         _escribir(nuevas)
         _recargar()
         return True, 'Recomendación eliminada'
+
+
+# --------------------------------------------------------------- EDICIÓN
+
+def editar_descripcion_sintoma(id_sintoma, nueva_desc):
+    with _lock_editor:
+        lineas = _leer()
+        eid = re.escape(id_sintoma)
+        patron = rf'^descripcion_sintoma\({eid},'
+        nueva_linea = f"descripcion_sintoma({id_sintoma}, '{nueva_desc}').\n"
+        nuevas, encontrado = [], False
+        for l in lineas:
+            if re.search(patron, l.strip()):
+                nuevas.append(nueva_linea)
+                encontrado = True
+            else:
+                nuevas.append(l)
+        if not encontrado:
+            return False, 'Síntoma no encontrado'
+        _escribir(nuevas)
+        _recargar()
+        return True, 'Síntoma actualizado'
+
+
+def editar_descripcion_falla(id_falla, nueva_desc):
+    with _lock_editor:
+        lineas = _leer()
+        eid = re.escape(id_falla)
+        patron = rf'^descripcion_falla\({eid},'
+        nueva_linea = f"descripcion_falla({id_falla}, '{nueva_desc}').\n"
+        nuevas, encontrado = [], False
+        for l in lineas:
+            if re.search(patron, l.strip()):
+                nuevas.append(nueva_linea)
+                encontrado = True
+            else:
+                nuevas.append(l)
+        if not encontrado:
+            return False, 'Falla no encontrada'
+        _escribir(nuevas)
+        _recargar()
+        return True, 'Falla actualizada'
+
+
+def editar_recomendacion(id_falla, texto_viejo, texto_nuevo):
+    with _lock_editor:
+        lineas = _leer()
+        prefijo = f'recomendacion({id_falla},'
+        texto_nuevo_seguro = texto_nuevo.replace("'", "\\'")
+        nueva_linea = f"recomendacion({id_falla}, '{texto_nuevo_seguro}').\n"
+        nuevas, encontrado = [], False
+        for l in lineas:
+            if l.strip().startswith(prefijo) and texto_viejo in l:
+                nuevas.append(nueva_linea)
+                encontrado = True
+            else:
+                nuevas.append(l)
+        if not encontrado:
+            return False, 'Recomendación no encontrada'
+        _escribir(nuevas)
+        _recargar()
+        return True, 'Recomendación actualizada'
+
+
+def editar_regla(id_sintoma, falla_vieja, falla_nueva):
+    with _lock_editor:
+        lineas = _leer()
+        es = re.escape(id_sintoma)
+        ef_nueva = re.escape(falla_nueva)
+
+        if any(re.search(rf'^sintoma_falla\({es},\s*{ef_nueva}\)\.', l.strip()) for l in lineas):
+            return False, 'La regla ya existe'
+
+        patron_viejo = rf'^sintoma_falla\({es},\s*{re.escape(falla_vieja)}\)\.'
+        nueva_linea = f'sintoma_falla({id_sintoma}, {falla_nueva}).\n'
+        nuevas, encontrado = [], False
+        for l in lineas:
+            if re.search(patron_viejo, l.strip()):
+                nuevas.append(nueva_linea)
+                encontrado = True
+            else:
+                nuevas.append(l)
+        if not encontrado:
+            return False, 'Regla no encontrada'
+        _escribir(nuevas)
+        _recargar()
+        return True, 'Regla actualizada'

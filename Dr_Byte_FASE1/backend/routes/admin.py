@@ -35,6 +35,16 @@ def crear_sintoma():
     return (jsonify({'mensaje': msg}), 201) if ok else (jsonify({'error': msg}), 409)
 
 
+@admin_bp.put('/admin/sintomas/<string:id_sintoma>')
+def editar_sintoma(id_sintoma):
+    datos = request.get_json() or {}
+    desc = datos.get('descripcion', '').strip()
+    if not desc:
+        return jsonify({'error': 'La descripción es obligatoria'}), 400
+    ok, msg = editor.editar_descripcion_sintoma(id_sintoma, desc)
+    return jsonify({'mensaje': msg}) if ok else (jsonify({'error': msg}), 404)
+
+
 @admin_bp.delete('/admin/sintomas/<string:id_sintoma>')
 def eliminar_sintoma(id_sintoma):
     if _id_invalido(id_sintoma):
@@ -65,6 +75,16 @@ def crear_falla():
     return (jsonify({'mensaje': msg}), 201) if ok else (jsonify({'error': msg}), 409)
 
 
+@admin_bp.put('/admin/fallas/<string:id_falla>')
+def editar_falla(id_falla):
+    datos = request.get_json() or {}
+    desc = datos.get('descripcion', '').strip()
+    if not desc:
+        return jsonify({'error': 'La descripción es obligatoria'}), 400
+    ok, msg = editor.editar_descripcion_falla(id_falla, desc)
+    return jsonify({'mensaje': msg}) if ok else (jsonify({'error': msg}), 404)
+
+
 @admin_bp.delete('/admin/fallas/<string:id_falla>')
 def eliminar_falla(id_falla):
     if _id_invalido(id_falla):
@@ -91,6 +111,16 @@ def crear_regla():
 
     ok, msg = editor.agregar_regla(sintoma, falla)
     return (jsonify({'mensaje': msg}), 201) if ok else (jsonify({'error': msg}), 409)
+
+
+@admin_bp.put('/admin/reglas/<string:sintoma>/<string:falla_vieja>')
+def editar_regla(sintoma, falla_vieja):
+    datos = request.get_json() or {}
+    falla_nueva = datos.get('falla_nueva', '').strip()
+    if _id_invalido(sintoma) or _id_invalido(falla_vieja) or _id_invalido(falla_nueva):
+        return jsonify({'error': 'Ids inválidos'}), 400
+    ok, msg = editor.editar_regla(sintoma, falla_vieja, falla_nueva)
+    return jsonify({'mensaje': msg}) if ok else (jsonify({'error': msg}), 409)
 
 
 @admin_bp.delete('/admin/reglas/<string:sintoma>/<string:falla>')
@@ -128,6 +158,20 @@ def crear_recomendacion():
 
     ok, msg = editor.agregar_recomendacion(falla, texto)
     return (jsonify({'mensaje': msg}), 201) if ok else (jsonify({'error': msg}), 500)
+
+
+@admin_bp.put('/admin/recomendaciones')
+def editar_recomendacion():
+    datos = request.get_json() or {}
+    falla       = datos.get('falla', '').strip()
+    texto_viejo = datos.get('texto_viejo', '').strip()
+    texto_nuevo = datos.get('texto_nuevo', '').strip()
+
+    if _id_invalido(falla) or not texto_viejo or not texto_nuevo:
+        return jsonify({'error': 'falla, texto_viejo y texto_nuevo son obligatorios'}), 400
+
+    ok, msg = editor.editar_recomendacion(falla, texto_viejo, texto_nuevo)
+    return jsonify({'mensaje': msg}) if ok else (jsonify({'error': msg}), 404)
 
 
 @admin_bp.delete('/admin/recomendaciones')
