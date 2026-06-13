@@ -2,6 +2,7 @@ import re
 from flask import Blueprint, request, jsonify
 import motor_prolog as motor
 import prolog_editor as editor
+import bot_config
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -140,3 +141,40 @@ def eliminar_recomendacion():
 
     ok, msg = editor.eliminar_recomendacion(falla, texto)
     return jsonify({'mensaje': msg}) if ok else (jsonify({'error': msg}), 500)
+
+
+# ============================================================ CONFIG BOT
+
+@admin_bp.get('/admin/config/bot')
+def obtener_config_bot():
+    cfg = bot_config.leer_config()
+    token = cfg['token']
+    return jsonify({
+        'token':      ('*' * 8 + token[-4:]) if len(token) > 4 else '',
+        'chat_id':    cfg['chat_id'],
+        'activo':     cfg['activo'],
+        'encabezado': cfg['encabezado'],
+    })
+
+
+@admin_bp.put('/admin/config/bot')
+def actualizar_config_bot():
+    datos = request.get_json() or {}
+
+    token      = datos.get('token', '').strip()
+    chat_id    = datos.get('chat_id', '').strip()
+    activo     = datos.get('activo')
+    encabezado = datos.get('encabezado', '').strip()
+
+    if activo is None or not isinstance(activo, bool):
+        return jsonify({'error': 'El campo activo debe ser true o false'}), 400
+    if not encabezado:
+        return jsonify({'error': 'El encabezado no puede estar vacío'}), 400
+
+    bot_config.guardar_config({
+        'token':      token,
+        'chat_id':    chat_id,
+        'activo':     activo,
+        'encabezado': encabezado,
+    })
+    return jsonify({'mensaje': 'Configuración del bot actualizada correctamente'})
