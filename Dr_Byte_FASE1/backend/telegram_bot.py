@@ -1,8 +1,18 @@
-from telegram import Bot
-from telegram.error import TelegramError
-import asyncio
+import httpx
 import config
 import bot_config
+
+_API = 'https://api.telegram.org/bot{token}/{method}'
+
+
+def _post(token, method, **kwargs):
+    url = _API.format(token=token, method=method)
+    try:
+        r = httpx.post(url, json=kwargs, timeout=10)
+        return r.json()
+    except Exception as e:
+        print(f'[Telegram] Error HTTP: {type(e).__name__}: {e}')
+        return {}
 
 
 def resetear_bot():
@@ -12,56 +22,44 @@ def resetear_bot():
 def verificar_conexion():
     cfg = bot_config.leer_config()
     token = cfg['token'] or config.TELEGRAM_TOKEN
+    resp = _post(token, 'getMe')
+    if resp.get('ok'):
+        bot = resp['result']
+        return {'nombre': bot['first_name'], 'username': bot['username']}
+    return {}
 
-    async def _verificar():
-        async with Bot(token=token) as bot:
-            info = await bot.get_me()
-            return {'nombre': info.first_name, 'username': info.username}
 
-    return asyncio.run(_verificar())
+def _enviar_mensaje(token, chat_id, texto, parse_mode=None):
+    params = {'chat_id': chat_id, 'text': texto}
+    if parse_mode:
+        params['parse_mode'] = parse_mode
+    resp = _post(token, 'sendMessage', **params)
+    if not resp.get('ok'):
+        print(f'[Telegram] Respuesta no OK: {resp.get("description", resp)}')
 
 
 def enviar_notificacion(id_diagnostico, fecha, sintomas, descripcion, recomendaciones):
     cfg = bot_config.leer_config()
 
-    token      = cfg['token']   or config.TELEGRAM_TOKEN
-    chat_id    = cfg['chat_id'] or config.TELEGRAM_CHAT_ID
-    encabezado = cfg['encabezado']
+    token   = cfg['token']   or config.TELEGRAM_TOKEN
+    chat_id = cfg['chat_id'] or config.TELEGRAM_CHAT_ID
 
     if not cfg['activo']:
-        async def _mantenimiento():
-            async with Bot(token=token) as bot:
-                await bot.send_message(
-                    chat_id=chat_id,
-                    text='Lo sentimos, el bot está en mantenimiento. Regresa más tarde.',
-                )
-        try:
-            asyncio.run(_mantenimiento())
-        except Exception as e:
-            print(f'[Telegram] Error al enviar mensaje de mantenimiento: {type(e).__name__}: {e}')
+        _enviar_mensaje(token, chat_id,
+                        'Lo sentimos, el bot está en mantenimiento. Regresa más tarde.')
         return
 
+    encabezado            = cfg['encabezado']
+    sintomas_texto        = ', '.join(sintomas)
     recomendaciones_texto = '\n'.join([f'  • {r}' for r in recomendaciones])
-    sintomas_texto = ', '.join(sintomas)
 
     mensaje = (
-        f'{encabezado}\n\n'
-        f'*ID:* {id_diagnostico}\n'
-        f'*Fecha:* {fecha}\n\n'
-        f'*Síntomas reportados:*\n  {sintomas_texto}\n\n'
-        f'⚠️ *Falla detectada:*\n  {descripcion}\n\n'
-        f'*Recomendaciones:*\n{recomendaciones_texto}'
+        f'<b>{encabezado}</b>\n\n'
+        f'<b>ID:</b> {id_diagnostico}\n'
+        f'<b>Fecha:</b> {fecha}\n\n'
+        f'<b>Síntomas reportados:</b>\n  {sintomas_texto}\n\n'
+        f'⚠️ <b>Falla detectada:</b>\n  {descripcion}\n\n'
+        f'<b>Recomendaciones:</b>\n{recomendaciones_texto}'
     )
 
-    async def _enviar():
-        async with Bot(token=token) as bot:
-            await bot.send_message(
-                chat_id=chat_id,
-                text=mensaje,
-                parse_mode='Markdown'
-            )
-
-    try:
-        asyncio.run(_enviar())
-    except Exception as e:
-        print(f'[Telegram] Error al enviar notificación: {type(e).__name__}: {e}')
+    _enviar_mensaje(token, chat_id, mensaje, parse_mode='HTML')

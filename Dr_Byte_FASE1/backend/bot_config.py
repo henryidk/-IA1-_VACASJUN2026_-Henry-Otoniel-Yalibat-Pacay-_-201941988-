@@ -11,7 +11,7 @@ _DEFAULTS = {
     'token':      '',
     'chat_id':    '',
     'activo':     True,
-    'encabezado': '*Nuevo diagnóstico — Doctor Byte*',
+    'encabezado': 'Nuevo diagnóstico — Doctor Byte',
 }
 
 
