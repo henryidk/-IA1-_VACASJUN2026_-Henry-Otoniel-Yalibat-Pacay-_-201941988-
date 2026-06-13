@@ -11,8 +11,10 @@ def create_app():
 
     from routes.diagnostico import diagnostico_bp
     from routes.historial import historial_bp
+    from routes.admin import admin_bp
     app.register_blueprint(diagnostico_bp, url_prefix='/api')
     app.register_blueprint(historial_bp, url_prefix='/api')
+    app.register_blueprint(admin_bp, url_prefix='/api')
 
     @app.errorhandler(404)
     def not_found(e):

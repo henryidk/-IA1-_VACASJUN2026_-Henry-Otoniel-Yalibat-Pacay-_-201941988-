@@ -49,3 +49,27 @@ def obtener_sintomas():
         prolog = _get_prolog()
         resultados = list(prolog.query('sintoma(S), descripcion_sintoma(S, D)'))
         return [{'id': str(r['S']), 'descripcion': str(r['D'])} for r in resultados]
+
+
+def obtener_fallas():
+    with _lock:
+        prolog = _get_prolog()
+        resultados = list(prolog.query('falla(F), descripcion_falla(F, D)'))
+        return [{'id': str(r['F']), 'descripcion': str(r['D'])} for r in resultados]
+
+
+def obtener_reglas():
+    with _lock:
+        prolog = _get_prolog()
+        resultados = list(prolog.query('sintoma_falla(S, F)'))
+        return [{'sintoma': str(r['S']), 'falla': str(r['F'])} for r in resultados]
+
+
+def obtener_recomendaciones(id_falla=None):
+    with _lock:
+        prolog = _get_prolog()
+        query = f'recomendacion({id_falla}, R)' if id_falla else 'recomendacion(F, R)'
+        resultados = list(prolog.query(query))
+        if id_falla:
+            return [str(r['R']) for r in resultados]
+        return [{'falla': str(r['F']), 'texto': str(r['R'])} for r in resultados]
