@@ -1,32 +1,95 @@
 :root {
-  --color-primario: #2563eb;
-  --color-primario-oscuro: #1d4ed8;
-  --color-fondo: #f1f5f9;
-  --color-exito: #16a34a;
-  --color-alerta: #d97706;
+  --color-oscuro:    #1A312C;
+  --color-primario:  #428475;
+  --color-acento:    #89D7B7;
+  --color-fondo:     #FFF4E1;
+  --color-alerta:    #d97706;
 }
 
+/* ----------------------------------------------------------------- BASE */
 body {
   background-color: var(--color-fondo);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
 }
 
-/* Navbar */
+/* --------------------------------------------------------------- NAVBAR */
 .navbar {
-  background-color: var(--color-primario) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-oscuro) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Hero */
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--color-acento) !important;
+}
+
+/* ----------------------------------------------------------------- HERO */
 .hero-section {
-  background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-  border-bottom: 1px solid #bfdbfe;
+  background: linear-gradient(160deg, #e8f5ef 0%, var(--color-fondo) 60%);
+  border-bottom: 1px solid #d4e6df;
 }
 
-/* Tarjetas de síntomas */
+.hero-section .bi {
+  color: var(--color-primario) !important;
+}
+
+/* ---------------------------------------------------- BOTONES PRIMARIOS */
+.btn-primary {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-oscuro);
+  border-color: var(--color-oscuro);
+  color: #fff;
+}
+
+.btn-acento {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-oscuro);
+  font-weight: 600;
+}
+
+.btn-oscuro {
+  background-color: var(--color-oscuro);
+  border-color: var(--color-oscuro);
+  color: #fff;
+  font-weight: 500;
+}
+
+.btn-oscuro:hover,
+.btn-oscuro:focus {
+  background-color: #122420;
+  border-color: #122420;
+  color: #fff;
+}
+
+.btn-acento:hover,
+.btn-acento:focus {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+.btn-outline-primary {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+/* ----------------------------------------------- TARJETAS DE SÍNTOMAS */
 .sintoma-card {
   cursor: pointer;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #d4e6df;
   border-radius: 10px;
   padding: 12px 16px;
   transition: all 0.2s ease;
@@ -36,13 +99,13 @@ body {
 
 .sintoma-card:hover {
   border-color: var(--color-primario);
-  background-color: #eff6ff;
+  background-color: #eaf5f0;
 }
 
 .sintoma-card.seleccionado {
   border-color: var(--color-primario);
-  background-color: #dbeafe;
-  color: var(--color-primario-oscuro);
+  background-color: #c8ede2;
+  color: var(--color-oscuro);
   font-weight: 500;
 }
 
@@ -50,10 +113,23 @@ body {
   color: var(--color-primario);
 }
 
-/* Resultado */
+/* ---------------------------------------------------------------- CARDS */
+.card {
+  border-color: #d4e6df;
+}
+
+.card-header {
+  border-bottom-color: #d4e6df;
+}
+
+.card-header .bi {
+  color: var(--color-primario);
+}
+
+/* -------------------------------------------------------------- RESULTADO */
 .resultado-falla {
-  background-color: #fef9c3;
-  border-left: 4px solid var(--color-alerta);
+  background-color: #eaf5f0;
+  border-left: 4px solid var(--color-primario);
   border-radius: 8px;
   padding: 16px 20px;
   margin-bottom: 16px;
@@ -61,29 +137,87 @@ body {
 
 .resultado-recomendaciones li {
   padding: 6px 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #ede8dd;
 }
 
 .resultado-recomendaciones li:last-child {
   border-bottom: none;
 }
 
-/* Badge historial */
+/* ----------------------------------------------------- BADGE HISTORIAL */
 .badge-falla {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: #c8ede2;
+  color: var(--color-oscuro);
   font-weight: 500;
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 0.8rem;
 }
 
-/* Tabla historial */
+/* --------------------------------------------------------- TABLA HISTORIAL */
 .tabla-historial tr {
   cursor: pointer;
   transition: background-color 0.15s;
 }
 
 .tabla-historial tr:hover {
-  background-color: #eff6ff;
+  background-color: #eaf5f0;
+}
+
+/* ---------------------------------------------------- ACORDEÓN ADMIN */
+.accordion-button:not(.collapsed) {
+  background-color: #c8ede2;
+  color: var(--color-oscuro);
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(66, 132, 117, 0.25);
+}
+
+.accordion-button::after {
+  filter: none;
+}
+
+/* ------------------------------------------- OVERRIDES BOOTSTRAP BADGES */
+.badge.bg-secondary {
+  background-color: var(--color-primario) !important;
+}
+
+/* ------------------------------------------ INPUTS FOCUS */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.2rem rgba(66, 132, 117, 0.2);
+}
+
+/* ------------------------------------------ BANDA OSCURA INDEX */
+.banda-oscura .card {
+  border-color: #2d5046;
+}
+
+.banda-oscura .card-header {
+  background-color: #1f3d37 !important;
+  border-bottom-color: #2d5046;
+  color: var(--color-acento);
+}
+
+.banda-oscura .card-header .bi {
+  color: var(--color-acento) !important;
+}
+
+/* ------------------------------------------ NAV TABS ADMIN */
+.nav-tabs .nav-link.active {
+  color: var(--color-oscuro);
+  border-color: #d4e6df #d4e6df #fff;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--color-primario);
+  border-color: transparent;
+}
+
+.nav-tabs {
+  border-bottom-color: #d4e6df;
 }
